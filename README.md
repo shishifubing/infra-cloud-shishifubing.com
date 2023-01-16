@@ -1,19 +1,19 @@
 # [`infra-cloud-shishifubing.com`][repo]
 
+<!-- shields -->
+[![shield-in-progress]][repo]
+
 <!-- internal links -->
 
 <!-- external links -->
 [repo]: https://github.com/shishifubing-com/infra-cloud-shishifubing.com
+[shield-in-progress]: https://img.shields.io/badge/status-in--progress-success?style=for-the-badge
 
 Personal terraform configs
-
----
 
 # Architecture
 
 TODO
-
----
 
 # Usage
 
@@ -26,16 +26,12 @@ make
 terraform apply
 ```
 
----
-
 # Getting started
 
 ## Create a folder in the cloud
 
 Create a folder, then modify [variables.tf][variables.tf] and
 [packer/variables.pkr.hcl][packer-variables]
-
----
 
 ## Delegate domain
 
@@ -45,8 +41,6 @@ In order for public Cloud DNS to work with your domain, you need to delegate it 
 - `ns2.yandexcloud.net`
 
 Cloud DNS settings are located in [networking.tf][networking]
-
----
 
 ## Setup terraform backend and local environment
 
@@ -118,8 +112,6 @@ chart = "chart"
 repository = "oci://cr.yandex/yc-marketplace/yandex-cloud/yc-alb-ingress"
 ```
 
----
-
 # Documentation
 
 - [Yandex Cloud][yandex-cloud] documentation
@@ -129,8 +121,6 @@ repository = "oci://cr.yandex/yc-marketplace/yandex-cloud/yc-alb-ingress"
   documentation
 - [S3 terraform backend][terraform-s3-backend] documentation
 - `*.cloud-init.yml` files - [cloud-init][cloud-init] configuration files
-
----
 
 <!-- internal links -->
 
@@ -156,3 +146,4 @@ repository = "oci://cr.yandex/yc-marketplace/yandex-cloud/yc-alb-ingress"
 [kubectl]: https://kubernetes.io/docs/reference/kubectl/
 [packer]: https://developer.hashicorp.com/packer/docs/intro
 [gitversion]: https://gitversion.net
+

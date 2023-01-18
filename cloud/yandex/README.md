@@ -50,7 +50,7 @@ cd cloud/yandex
 # install tools, link .terraformrc, link .bashrc
 "${DOTFILES:-${HOME}/Dotfiles}/scripts/setup.sh"
 # export credentials
-# they need to be exported when you run terraform commands
+# they have to be exported when you run terraform commands
 # you need to execute the script in your current shell (either . or source)
 . ./variables.sh
 # initialize terraform backend
@@ -106,12 +106,12 @@ repository = "oci://cr.yandex/yc-marketplace/yandex-cloud/yc-alb-ingress"
 
 <!-- internal links -->
 
-[networking]: ./cloud/yandex/modules/main/networking.tf
-[setup.sh]: ./cloud/yandex/packer/setup.sh
-[backend]: ./cloud/yandex/main.s3.tfbackend
-[variables.sh]: ./cloud/yandex/variables.sh
-[variables.tf]: ./cloud/yandex/variables.tf
-[packer-variables]: ./cloud/yandex/packer/variables.pkr.hcl
+[networking]: ./modules/main/networking.tf
+[setup.sh]: ./packer/setup.sh
+[backend]: ./main.s3.tfbackend
+[variables.sh]: ./variables.sh
+[variables.tf]: ./variables.tf
+[packer-variables]: ./packer/variables.pkr.hcl
 
 <!-- external links -->
 

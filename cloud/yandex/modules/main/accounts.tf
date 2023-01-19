@@ -49,9 +49,9 @@ resource "yandex_resourcemanager_folder_iam_binding" "vpc_publicAdmin" {
   ]
 }
 
-resource "yandex_resourcemanager_folder_iam_binding" "certificate_download" {
+resource "yandex_resourcemanager_folder_iam_binding" "certificate_admin" {
   folder_id = var.folder_id
-  role      = "certificate-manager.certificates.downloader"
+  role      = "certificate-manager.admin"
   members = [
     "serviceAccount:${yandex_iam_service_account.cluster_ingress.id}"
   ]

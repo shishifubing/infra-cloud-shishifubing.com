@@ -23,6 +23,14 @@ output "domain" {
   value = var.domain
 }
 
+output "bastion_user" {
+  value = module.main.user_server
+}
+
+output "bastion_domain" {
+  value = "bastion.${var.domain}"
+}
+
 output "master_domain" {
   value = "master.${var.domain}"
 }

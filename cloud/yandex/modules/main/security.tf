@@ -10,3 +10,31 @@ resource "yandex_iam_service_account_key" "cluster_ingress" {
   description        = "authorized key for the cluster ingress (terraform)"
   key_algorithm      = "RSA_4096"
 }
+
+resource "yandex_vpc_security_group" "allow_outgoing" {
+  name        = "allow_outgoing"
+  description = "allow all outgoing connections"
+  network_id  = yandex_vpc_network.default.id
+
+  egress {
+    description    = "allow all outgoing connections"
+    protocol       = "ANY"
+    from_port      = 0
+    to_port        = 65535
+    v4_cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "yandex_vpc_security_group" "allow_incoming" {
+  name        = "allow_incoming"
+  description = "allow all incoming connections"
+  network_id  = yandex_vpc_network.default.id
+
+  ingress {
+    description    = "allow all incoming connections"
+    protocol       = "ANY"
+    from_port      = 0
+    to_port        = 65535
+    v4_cidr_blocks = ["0.0.0.0/0"]
+  }
+}

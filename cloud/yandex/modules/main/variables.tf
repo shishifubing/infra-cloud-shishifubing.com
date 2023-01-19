@@ -31,7 +31,6 @@ variable "domain_top_redirect" {
 
 variable "user_server" {
   description = "admin user for all servers"
-  default     = "jingyangzhenren"
 }
 
 variable "user_ci" {

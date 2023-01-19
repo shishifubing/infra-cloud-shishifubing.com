@@ -2,6 +2,7 @@
 locals {
   master_balancer_external = yandex_vpc_address.cluster_master.external_ipv4_address.0.address
   master_fqdm              = "master.${var.domain}"
+  zone_fixed               = substr(var.zone, 0, length(var.zone) - 2)
 }
 
 # networks
@@ -22,8 +23,28 @@ resource "yandex_vpc_subnet" "cluster" {
   description    = "cluster subnet"
   network_id     = yandex_vpc_network.default.id
   v4_cidr_blocks = ["10.129.0.0/24"]
+  route_table_id = yandex_vpc_route_table.cluster.id
 }
-###
+
+resource "yandex_vpc_gateway" "cluster" {
+  name        = "cluster"
+  description = <<-EOT
+    gateway for the cluster nodes
+    without it they do not have internet access
+  EOT
+  shared_egress_gateway {
+  }
+}
+
+resource "yandex_vpc_route_table" "cluster" {
+  name       = "cluster"
+  network_id = yandex_vpc_network.default.id
+
+  static_route {
+    destination_prefix = "0.0.0.0/0"
+    gateway_id         = yandex_vpc_gateway.cluster.id
+  }
+}
 
 # public DNS
 resource "yandex_dns_zone" "public" {
@@ -36,6 +57,14 @@ resource "yandex_dns_zone" "public" {
 resource "yandex_dns_recordset" "public" {
   zone_id = yandex_dns_zone.public.id
   name    = "@"
+  type    = "CNAME"
+  ttl     = 200
+  data    = [var.domain_top_redirect]
+}
+
+resource "yandex_dns_recordset" "public_www" {
+  zone_id = yandex_dns_zone.public.id
+  name    = "www"
   type    = "CNAME"
   ttl     = 200
   data    = [var.domain_top_redirect]
@@ -59,7 +88,6 @@ resource "yandex_dns_recordset" "master_external" {
 ###
 
 # internal DNS
-
 resource "yandex_dns_zone" "internal" {
   name        = "internal"
   description = "internal dns zone"
@@ -80,11 +108,11 @@ resource "yandex_dns_recordset" "master" {
 
 ###
 
-# load balancer the master
+# load balancer for the master
 resource "yandex_lb_network_load_balancer" "cluster_master" {
   name      = "cluster-master-load-balancer"
   type      = "external"
-  region_id = var.zone
+  region_id = local.zone_fixed
 
   listener {
     name = "main"
@@ -118,7 +146,7 @@ resource "yandex_vpc_address" "cluster_master" {
 resource "yandex_lb_target_group" "cluster_master" {
   name        = "cluster-master"
   description = "target group for the master"
-  region_id   = var.zone
+  region_id   = local.zone_fixed
   target {
     subnet_id = yandex_vpc_subnet.cluster.id
     address   = local.master_ip

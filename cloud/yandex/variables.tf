@@ -15,6 +15,7 @@ variable "cloud_id" {
 
 variable "authorized_key" {
   description = "authorized key for yandex cloud"
+  sensitive   = true
 }
 
 variable "zone" {
@@ -25,6 +26,10 @@ variable "zone" {
 variable "domain" {
   description = "domain for public Cloud DNS"
   default     = "shishifubing.com"
+}
+
+variable "user_server" {
+  default = "shishifubing"
 }
 
 variable "domain_internal" {

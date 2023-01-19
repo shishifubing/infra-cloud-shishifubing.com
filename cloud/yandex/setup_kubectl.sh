@@ -1,34 +1,46 @@
 #!/usr/bin/env bash
 set -Eeuxo pipefail
 
-master_domain="$(terraform output -raw master_domain)"
-cloud_id="$(terraform output -raw cloud_id)"
-folder_id="$(terraform output -raw folder_id)"
-cluster_id="$(terraform output -raw cluster_id)"
+domain="${1:-$(terraform output -raw domain)}"
+cloud_id="${2:-$(terraform output -raw cloud_id)}"
+folder_id="${3:-$(terraform output -raw folder_id)}"
+cluster_id="${4:-$(terraform output -raw cluster_id)}"
+user="${5:-$(terraform output -raw bastion_user)}"
 
-# setup kubectl on the bastion host and create admin user in the cluster
-# the script is included in the VM image built by packer
-ssh bastion "./setup_kubectl.sh ${cloud_id} ${folder_id} ${cluster_id}"
+bastion_domain="bastion.${domain}"
+master_domain="master.${domain}"
+bastion_ssh="${user}@${bastion_domain}"
+
+# I have to execute that script remotely because `yc` can set credentials only
+# by using internal IP or external IP, and I refuse to give the master external IP
+ssh "${bastion_ssh}" "bash -s" -- <"./setup_kubectl_remote.sh" \
+    "${cloud_id}"                                              \
+    "${folder_id}"                                             \
+    "${cluster_id}"
 
 credentials="Credentials/yc"
-ca="${credentials}/ca.pem"
-token="${credentials}/sa_admin_token.txt"
+ca="${credentials}/${cluster_id}-ca.pem"
+token="${credentials}/${cluster_id}-token-admin.txt"
 
-scp "bastion:${token}"        \
-    "bastion:${ca}"           \
+# copy credentials that the remote script has generated to the local machine
+scp "${bastion_ssh}:~/${token}" \
+    "${bastion_ssh}:~/${ca}"    \
     "${HOME}/${credentials}/"
 
-kubectl config set-cluster personal        \
+# setup kubeconfig using those credentials
+kubectl config set-cluster "${cluster_id}" \
   --certificate-authority="${HOME}/${ca}"  \
   --server="https://${master_domain}"      \
   --tls-server-name="kubernetes"
 
 set +x
-kubectl config set-credentials admin-user \
-  --token="$(<"${HOME}/${token}")"
+kubectl config set-credentials admin-user --token="$(<"${HOME}/${token}")"
 set -x
-kubectl config set-context personal \
-  --cluster=personal                \
+
+kubectl config set-context "${cluster_id}" \
+  --cluster="${cluster_id}"                \
   --user=admin-user
-kubectl config use-context personal
+
+# check connectivity
+kubectl config use-context "${cluster_id}"
 kubectl cluster-info

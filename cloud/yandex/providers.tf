@@ -31,7 +31,6 @@ provider "yandex" {
 
 provider "yandex" {
   alias                    = "bucket"
-  version                  = "value"
   folder_id                = var.folder_id_bucket
   cloud_id                 = var.cloud_id
   service_account_key_file = var.authorized_key
@@ -39,13 +38,13 @@ provider "yandex" {
 
 provider "kubernetes" {
   config_path    = pathexpand(var.kubernetes_config_path)
-  config_context = var.kubernetes_context
+  config_context = module.main.cluster_id
 }
 
 provider "helm" {
   kubernetes {
     config_path    = pathexpand(var.kubernetes_config_path)
-    config_context = var.kubernetes_context
+    config_context = module.main.cluster_id
   }
 
   registry {

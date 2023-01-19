@@ -9,7 +9,7 @@ variable "namespace_ingress" {
 }
 
 variable "ingress_authorized_key" {
-  type        = map(string)
+  sensitive   = true
   description = "authorized key for the cluster ingress"
 }
 

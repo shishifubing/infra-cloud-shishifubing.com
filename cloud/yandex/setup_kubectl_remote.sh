@@ -5,6 +5,8 @@ cloud_id="${1}"
 folder_id="${2}"
 cluster_id="${3}"
 
+mkdir -pm 700 "${HOME}/Credentials/yc"
+
 # setup local kubectl
 yc managed-kubernetes cluster get-credentials \
     "${cluster_id}"                           \
@@ -23,7 +25,7 @@ yc managed-kubernetes cluster get                          \
     --format json                                          |
         jq -r ".master.master_auth.cluster_ca_certificate" |
         awk '{gsub(/\\n/,"\n")}1'                          \
-    >"${HOME}/Credentials/yc/ca-${cluster_id}.pem"
+    >"${HOME}/Credentials/yc/${cluster_id}-ca.pem"
 
 kubectl apply -f - <<EOF
 apiVersion: v1
@@ -57,5 +59,5 @@ token=$(
         jq -r .data.token |
         base64 --d
 )
-echo "${token}" >"${HOME}/Credentials/yc/admin_token-${cluster_id}.txt"
+echo "${token}" >"${HOME}/Credentials/yc/${cluster_id}-token-admin.txt"
 set -x

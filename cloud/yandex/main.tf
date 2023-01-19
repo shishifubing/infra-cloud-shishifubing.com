@@ -8,14 +8,14 @@ locals {
 }
 
 # manage the s3 bucket
-module "bucket" {
-  source = "./modules/bucket"
-  providers = {
-    yandex = yandex.bucket
-  }
+# module "bucket" {
+#   source = "./modules/bucket"
+#   providers = {
+#     yandex = yandex.bucket
+#   }
 
-  name = "${replace(var.domain, ".", "-")}-terraform"
-}
+#   name = "${replace(var.domain, ".", "-")}-terraform"
+# }
 
 # setup infrastructure, create a kubernetes cluster
 module "main" {
@@ -30,20 +30,23 @@ module "main" {
   domain_top_redirect = var.domain_top_redirect
   kubernetes_version  = var.kubernetes_version
   ssh_authorized_keys = local.ssh_authorized_keys
+  user_server         = var.user_server
 }
 
-# set up kubectl if `kubectl cluster-info` fails
+# setup kubectl if `kubectl cluster-info` fails
 resource "null_resource" "check_kubeconfig" {
-  depends_on = [
-    module.main
-  ]
   provisioner "local-exec" {
     command = <<-EOT
-      ${path.module}/setup_kubectl.sh    \
-        "${var.cloud_id}"                \
-        "${var.folder_id}                \
-        "${module.main.cluster_id}       \
-        "master.${var.domain}"
+      set -Eeuxo pipefail
+      {
+        kubectl config use-context "${module.main.cluster_id}"
+        kubectl cluster-info
+      } || ${path.module}/setup_kubectl.sh \
+        "${var.domain}"                    \
+        "${var.cloud_id}"                  \
+        "${var.folder_id}"                 \
+        "${module.main.cluster_id}"        \
+        "${var.user_server}"
     EOT
   }
 }
@@ -58,5 +61,4 @@ module "cluster" {
   ingress_authorized_key = module.main.cluster_ingress_authorized_key
   folder_id              = var.folder_id
   cluster_id             = module.main.cluster_id
-
 }

@@ -5,24 +5,18 @@ resource "helm_release" "ingress_controller" {
   namespace       = kubernetes_namespace.ingress.metadata.0.name
   atomic          = true
   cleanup_on_fail = true
+  lint            = true
 
   version    = "v0.1.9"
   chart      = "chart"
   repository = "oci://cr.yandex/yc-marketplace/yandex-cloud/yc-alb-ingress"
 
-  set_sensitive {
-    name = "saKeySecretKey"
-    # I have to encode it two times because the first time it makes proper
-    # json which is directly injected into the template - it fails
-    #
-    # commas are escaped because helm provider fails with
-    # `has no value (cannot end with ,)`
-    value = replace(
-      jsonencode(jsonencode(var.ingress_authorized_key)),
-      ",",
-      "\\,"
-    )
-  }
+  # I cannot use `set` or `set_sensitive` - the helm provider fucks up the
+  # formatting somehow
+  values = [
+    "saKeySecretKey: '${jsonencode(var.ingress_authorized_key)}'"
+  ]
+
   set {
     name  = "folderId"
     value = var.folder_id
@@ -32,4 +26,5 @@ resource "helm_release" "ingress_controller" {
     name  = "clusterId"
     value = var.cluster_id
   }
+
 }

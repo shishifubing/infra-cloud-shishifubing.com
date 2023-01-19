@@ -35,21 +35,13 @@ build {
   sources = ["source.yandex.${local.base}"]
 
   provisioner "shell" {
-    script = "image_init_wait.sh"
-  }
-
-  provisioner "file" {
-    sources = ["setup_kubectl.sh", "setup_yc.sh"]
-    destination = "~/"
-  }
-
-  provisioner "shell" {
     env = {
       YC_TOKEN     =  var.oauth_key
       YC_FOLDER_ID = var.folder_id
       YC_CLOUD_ID  = var.cloud_id
     }
     scripts = [
+      "image_init_wait.sh",
       var.setup_script_path,
       "setup_yc.expect"
     ]

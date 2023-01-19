@@ -1,10 +1,11 @@
 # Usage
 
 ```bash
-cd cloud/yandex
+# export auth variables
+. ./variables.sh
 # build images
 make
-# update infrastructure
+# update the infrastructure
 terraform apply
 ```
 
@@ -37,7 +38,7 @@ You need to:
   state file in that bucket
 - create a static key for that account, download it
 - modify [variables.sh][variables.sh]
-- change backend bucket configuration in [production.s3.tfbackend][backend]
+- change backend bucket configuration in [min.s3.tfbackend][backend]
   or use your own backend file
 - initialize terraform backend (full command is below)
 
@@ -46,37 +47,21 @@ You need to:
 [S3 terraform backend][terraform-s3-backend] documentation
 
 ```bash
-cd cloud/yandex
 # install tools, link .terraformrc, link .bashrc
 "${DOTFILES:-${HOME}/Dotfiles}/scripts/setup.sh"
 # export credentials
 # they have to be exported when you run terraform commands
-# you need to execute the script in your current shell (either . or source)
+# you need to execute the script in your current shell (either `.` or `source`)
 . ./variables.sh
 # initialize terraform backend
 terraform init -reconfigure -backend-config=./main.s3.tfbackend
 # build images
 make
 # create the infrastructure
-terraform apply -target=modules.main
-# setup ssh
-echo "$(terraform output -raw ssh_config)" >>"${HOME}/.ssh/config"
-# setup local kubectl
-./setup_kubectl.sh
-# setup the cluster
 terraform apply
+# setup ssh (if you need to)
+echo "$(terraform output -raw ssh_config)" >>"${HOME}/.ssh/config"
 ```
-
-[`setup.sh`][setup.sh] script installs:
-
-- [`terraform`][terraform]
-- [`packer`][packer]
-- [`gitversion`][gitversion]
-- [`kubectl`][kubectl]
-- [`yc`][yc]
-- [`helm`][helm]
-
----
 
 ### Helm provider fails to download helm charts and doesn't provide a reason
 

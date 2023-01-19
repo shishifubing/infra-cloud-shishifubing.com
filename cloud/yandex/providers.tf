@@ -33,7 +33,7 @@ provider "yandex" {
   alias                    = "bucket"
   folder_id                = var.folder_id_bucket
   cloud_id                 = var.cloud_id
-  service_account_key_file = var.authorized_key
+  service_account_key_file = var.authorized_key_bucket
 }
 
 provider "kubernetes" {

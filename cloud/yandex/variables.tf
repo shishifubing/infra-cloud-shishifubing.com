@@ -18,6 +18,11 @@ variable "authorized_key" {
   sensitive   = true
 }
 
+variable "authorized_key_bucket" {
+  description = "authorized key for the bucket"
+  sensitive   = true
+}
+
 variable "zone" {
   description = "yandex cloud zone"
   default     = "ru-central1-a"

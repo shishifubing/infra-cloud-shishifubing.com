@@ -36,18 +36,19 @@ You need to:
   matter what)
 - create a policy allowing that account to create, retrieve, and modify the
   state file in that bucket
+  (it is optional if there are no access policies defined)
 - create a static key for that account, download it
 - modify [variables.sh][variables.sh]
-- change backend bucket configuration in [min.s3.tfbackend][backend]
+- change backend bucket configuration in [main.s3.tfbackend][backend]
   or use your own backend file
-- initialize terraform backend (full command is below)
 
 [S3 backend in Yandex Cloud][yandex-terraform-s3-backend] documentation
 
 [S3 terraform backend][terraform-s3-backend] documentation
 
 ```bash
-# install tools, link .terraformrc, link .bashrc
+# install tools, link configs
+# https://github.com/shishifubing-com/misc-personal-dotfiles/blob/main/scripts/setup.sh
 "${DOTFILES:-${HOME}/Dotfiles}/scripts/setup.sh"
 # export credentials
 # they have to be exported when you run terraform commands
@@ -55,6 +56,10 @@ You need to:
 . ./variables.sh
 # initialize terraform backend
 terraform init -reconfigure -backend-config=./main.s3.tfbackend
+# import the service account that you created
+terraform import module.bucket.yandex_iam_service_account.terraform "aje5ptih4ar3v13mm17m"
+# import the bucket (it can take a minute)
+terraform import module.bucket.yandex_storage_bucket.terraform "shishifubing-com-terraform"
 # build images
 make
 # create the infrastructure

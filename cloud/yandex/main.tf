@@ -8,14 +8,16 @@ locals {
 }
 
 # manage the s3 bucket
-# module "bucket" {
-#   source = "./modules/bucket"
-#   providers = {
-#     yandex = yandex.bucket
-#   }
+module "bucket" {
+  source = "./modules/bucket"
+  providers = {
+    yandex = yandex.bucket
+  }
 
-#   name = "${replace(var.domain, ".", "-")}-terraform"
-# }
+  name      = "${replace(var.domain, ".", "-")}-terraform"
+  folder_id = var.folder_id_bucket
+  max_size  = 1024 * 1024 * 300 # 300 megabytes
+}
 
 # setup infrastructure, create a kubernetes cluster
 module "main" {

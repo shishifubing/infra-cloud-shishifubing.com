@@ -14,7 +14,7 @@ TODO
 
 # Documentation
 
-Please look at [cloud/yandex][documentation]
+Please refer to [cloud/yandex][documentation]
 
 <!-- internal links -->
 

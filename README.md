@@ -1,8 +1,4 @@
-# [`infra-cloud-shishifubing.com`][repo]
-
-<!-- shields -->
-
-[![shield-in-progress]][repo]
+# [`infra-cloud-shishifubing.com`][repo-url]
 
 Terraform module managing infrastructure for [shishifubing.com][site-url]
 
@@ -22,7 +18,6 @@ Please look at [cloud/yandex][documentation]
 
 <!-- external links -->
 
-[repo]: https://github.com/shishifubing-com/infra-cloud-shishifubing.com
-[shield-in-progress]: https://img.shields.io/badge/status-in--progress-success?style=for-the-badge
+[repo]: https://github.com/shishifubing/infra-cloud-shishifubing.com
 [site-url]: https://shishifubing.com
 [yandex-cloud-url]: https://cloud.yandex.com/en

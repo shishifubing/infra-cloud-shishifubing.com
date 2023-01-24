@@ -18,6 +18,6 @@ Please look at [cloud/yandex][documentation]
 
 <!-- external links -->
 
-[repo]: https://github.com/shishifubing/infra-cloud-shishifubing.com
+[repo-url]: https://github.com/shishifubing/infra-cloud-shishifubing.com
 [site-url]: https://shishifubing.com
 [yandex-cloud-url]: https://cloud.yandex.com/en

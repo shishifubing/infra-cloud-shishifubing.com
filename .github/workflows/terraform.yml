@@ -19,7 +19,7 @@ jobs:
           echo "${{ secrets.YC_CLUSTER_KUBECONFIG }}" >"${HOME}/.kube/config"
 
       - name: run terraform
-        uses: shishifubing/ci-actions-common/actions/terraform@feature/terraform-action
+        uses: shishifubing/ci-actions-common/actions/terraform@main
         with:
           working_directory: cloud/yandex
         env:

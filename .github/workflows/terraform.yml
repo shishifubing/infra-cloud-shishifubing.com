@@ -11,25 +11,22 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: hashicorp/terraform:1.3.7
-    defaults:
-      run:
-        working-directory: cloud/yandex
 
     steps:
       - name: mask authorized keys
         run: |
           echo "::add-mask::${{ toJSON(secrets.YC_MAIN_ADMIN_AUTHORIZED_KEY) }}"
           echo "::add-mask::${{ toJSON(secrets.YC_BUCKET_ADMIN_AUTHORIZED_KEY) }}"
-        working-directory: ./
 
       - name: create kubeconfig
         run: |
           mkdir -m 700 "${HOME}/.kube"
           echo "${{ secrets.YC_CLUSTER_KUBECONFIG }}" >"${HOME}/.kube/config"
-        working-directory: ./
 
       - name: run terraform
         uses: shishifubing/ci-actions-common/actions/terraform@feature/terraform-action
+        with:
+          working_directory: cloud/yandex
         env:
           # you have to encode authorized keys
           AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_BUCKET_ID }}

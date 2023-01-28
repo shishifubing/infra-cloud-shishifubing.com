@@ -16,11 +16,19 @@ variable "cloud_id" {
 variable "authorized_key" {
   description = "authorized key for yandex cloud"
   sensitive   = true
+  validation {
+    condition     = can(jsondecode(var.authorized_key))
+    error_message = "must be JSON"
+  }
 }
 
 variable "authorized_key_bucket" {
   description = "authorized key for the bucket"
   sensitive   = true
+  validation {
+    condition     = can(jsondecode(var.authorized_key_bucket))
+    error_message = "must be JSON"
+  }
 }
 
 variable "static_key_bucket" {
@@ -65,9 +73,4 @@ variable "kubernetes_version" {
 variable "kubernetes_config_path" {
   description = "path to the kubernetes config file"
   default     = "~/.kube/config"
-}
-
-variable "kubernetes_context" {
-  description = "name of the context to use"
-  default     = "personal"
 }

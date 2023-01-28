@@ -30,6 +30,7 @@ scp "${bastion_ssh}:~/${token}" \
 # setup kubeconfig using those credentials
 kubectl config set-cluster "${cluster_id}" \
   --certificate-authority="${HOME}/${ca}"  \
+  --embed-certs                            \
   --server="https://${master_domain}"      \
   --tls-server-name="kubernetes"
 

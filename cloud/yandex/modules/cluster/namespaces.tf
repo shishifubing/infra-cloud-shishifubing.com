@@ -9,3 +9,10 @@ resource "kubernetes_namespace" "ingress" {
     name = var.namespace_ingress
   }
 }
+
+
+resource "kubernetes_namespace" "vault" {
+  metadata {
+    name = var.namespace_vault
+  }
+}

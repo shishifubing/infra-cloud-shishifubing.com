@@ -14,9 +14,11 @@ module "bucket" {
     yandex = yandex.bucket
   }
 
-  name      = "${replace(var.domain, ".", "-")}-terraform"
-  folder_id = var.folder_id_bucket
-  max_size  = 1024 * 1024 * 300 # 300 megabytes
+  folder_id          = var.folder_id_bucket
+  terraform_name     = "${replace(var.domain, ".", "-")}-terraform"
+  vault_name         = "${replace(var.domain, ".", "-")}-vault"
+  vault_max_size     = 1024 * 1024 * 300 # 300 megabytes
+  terraform_max_size = 1024 * 1024 * 300 # 300 megabytes
 }
 
 # setup infrastructure, create a kubernetes cluster
@@ -36,6 +38,7 @@ module "main" {
 }
 
 # setup kubectl if `kubectl cluster-info` fails
+# this is intended only for personal convenience
 resource "null_resource" "check_kubeconfig" {
   provisioner "local-exec" {
     command = <<-EOT
@@ -63,4 +66,6 @@ module "cluster" {
   ingress_authorized_key = module.main.cluster_ingress_authorized_key
   folder_id              = var.folder_id
   cluster_id             = module.main.cluster_id
+  vault_authorized_key   = ""
+  vault_kms_key_id       = ""
 }

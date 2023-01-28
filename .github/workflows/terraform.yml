@@ -27,7 +27,9 @@ jobs:
           echo "::add-mask::${{ toJSON(secrets.YC_BUCKET_ADMIN_AUTHORIZED_KEY) }}"
 
       - name: create kubeconfig
-        run: echo "${{ secrets.YC_CLUSTER_KUBECONFIG }}" >"${HOME}/.kube/config"
+        run: |
+          mkdir -m 700 "${HOME}/.kube"
+          echo "${{ secrets.YC_CLUSTER_KUBECONFIG }}" >"${HOME}/.kube/config"
 
       - name: run terraform
         uses: shishifubing/ci-actions-common/actions/terraform@feature/terraform-action

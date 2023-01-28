@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: hashicorp/terraform:1.3.7
+    defaults:
+      run:
+        working-directory: cloud/yandex
     env:
       # you have to encode authorized keys
       AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_BUCKET_ID }}

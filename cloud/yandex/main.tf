@@ -38,6 +38,7 @@ module "main" {
 }
 
 # setup kubectl if `kubectl cluster-info` fails
+# this is intended only for personal convenience
 resource "null_resource" "check_kubeconfig" {
   provisioner "local-exec" {
     command = <<-EOT

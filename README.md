@@ -1,8 +1,9 @@
-# [`infra-cloud-shishifubing.com`][repo]
+# [`infra-cloud-shishifubing.com`][repo-url]
 
 <!-- shields -->
 
-[![terraform][terraform-workflow-shield]][terraform-workflow-url]
+[![Terraform][terraform-workflow-shield]][terraform-workflow-url]
+
 
 Terraform module managing infrastructure for [shishifubing.com][site-url]
 
@@ -26,7 +27,7 @@ Please refer to [cloud/yandex][documentation]
 
 <!-- external links -->
 
-[repo]: https://github.com/shishifubing-com/infra-cloud-shishifubing.com
+[repo-url]: https://github.com/shishifubing/infra-cloud-shishifubing.com
 [site-url]: https://shishifubing.com
 [yandex-cloud-url]: https://cloud.yandex.com/en
 [terraform-workflow-url]: https://github.com/shishifubing-com/infra-cloud-shishifubing.com/actions/workflows/terraform_main.yml

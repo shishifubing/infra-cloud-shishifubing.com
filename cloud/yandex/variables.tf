@@ -23,6 +23,16 @@ variable "authorized_key_bucket" {
   sensitive   = true
 }
 
+variable "static_key_bucket" {
+  description = "secret key for the bucket admin account"
+  sensitive   = true
+}
+
+variable "static_key_id_bucket" {
+  description = "key id for the bucket admin account"
+  sensitive   = true
+}
+
 variable "zone" {
   description = "yandex cloud zone"
   default     = "ru-central1-a"

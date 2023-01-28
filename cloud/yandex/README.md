@@ -1,5 +1,13 @@
 # Usage
 
+## CI
+
+- Commit
+- Make a PR
+- Merge
+
+## Manual
+
 ```bash
 # export auth variables
 . ./variables.sh
@@ -30,17 +38,15 @@ Cloud DNS settings are located in [networking.tf][networking]
 You need to:
 
 - create an s3 bucket to store the terraform state file
-- create `terraform-state-manager` service account with `storage.editor`
+- create `bucket-admin` service account with `storage.admin`
   role
-  (without the role the account will not be able to work with the bucket no
-  matter what)
-- create a policy allowing that account to create, retrieve, and modify the
-  state file in that bucket
-  (it is optional if there are no access policies defined)
-- create a static key for that account, download it
-- modify [variables.sh][variables.sh]
-- change backend bucket configuration in [main.s3.tfbackend][backend]
-  or use your own backend file
+- create an authorized key for that account, download it
+- create `bucket-terraform-editor` account with `storage.editor` role
+- create a static key for it, download it
+- modify `TF_VAR_authorized_key_bucket`, `AWS_ACCESS_KEY_ID`, and
+  `AWS_SECRET_ACCESS_KEY` in [variables.sh][variables.sh]
+- modify backend bucket configuration in [main.s3.tfbackend][backend]
+- import the accounts and the bucket
 
 [S3 backend in Yandex Cloud][yandex-terraform-s3-backend] documentation
 
@@ -48,17 +54,18 @@ You need to:
 
 ```bash
 # install tools, link configs
-# https://github.com/shishifubing-com/misc-personal-dotfiles/blob/main/scripts/setup.sh
-"${DOTFILES:-${HOME}/Dotfiles}/scripts/setup.sh"
+url="https://raw.githubusercontent.com/shishifubing-com/misc-personal-dotfiles/main/scripts/setup.sh"
+curl -sSL "${url}" | bash
 # export credentials
 # they have to be exported when you run terraform commands
 # you need to execute the script in your current shell (either `.` or `source`)
 . ./variables.sh
 # initialize terraform backend
-terraform init -reconfigure -backend-config=./main.s3.tfbackend
-# import the service account that you created
-terraform import module.bucket.yandex_iam_service_account.terraform "aje5ptih4ar3v13mm17m"
-# import the bucket (it can take a minute)
+terraform init -reconfigure -backend-config=main.s3.tfbackend
+# import service accounts that you created
+terraform import module.bucket.yandex_iam_service_account.admin "ajejspdr1h4brif17qo1"
+terraform import module.bucket.yandex_iam_service_account.terraform_editor "ajejsd0ei25cgf44irbi"
+# import the bucket (it can take a bit of time)
 terraform import module.bucket.yandex_storage_bucket.terraform "shishifubing-com-terraform"
 # build images
 make

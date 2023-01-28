@@ -30,10 +30,19 @@ provider "yandex" {
 }
 
 provider "yandex" {
+  # For extended API usage, such as setting max_size, folder_id, anonymous_access_flags,
+  # default_storage_class and https parameters for bucket, will be used default
+  # authorization method, i.e. IAM / OAuth token from provider block will be used.
+  # This might be a little bit confusing in cases when separate service account
+  # is used for managing buckets because in this case buckets will be accessed
+  # by two different accounts that might have different permissions for buckets.
   alias                    = "bucket"
   folder_id                = var.folder_id_bucket
   cloud_id                 = var.cloud_id
   service_account_key_file = var.authorized_key_bucket
+  # you need a static key to import a bucket
+  storage_access_key = var.static_key_id_bucket
+  storage_secret_key = var.static_key_bucket
 }
 
 provider "kubernetes" {

@@ -12,6 +12,7 @@ jobs:
     with:
       working-directory: ./cloud/yandex
     secrets:
+      # you have to encode authorized keys
       env: |
         AWS_ACCESS_KEY_ID=${{ secrets.TERRAFORM_BUCKET_ID }}
         AWS_SECRET_ACCESS_KEY=${{ secrets.TERRAFORM_BUCKET_KEY }}

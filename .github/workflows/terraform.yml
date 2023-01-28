@@ -16,8 +16,8 @@ jobs:
         AWS_ACCESS_KEY_ID=${{ secrets.TERRAFORM_BUCKET_ID }}
         AWS_SECRET_ACCESS_KEY=${{ secrets.TERRAFORM_BUCKET_KEY }}
 
-        TF_VAR_authorized_key='${{ secrets.YC_MAIN_ADMIN_AUTHORIZED_KEY }}'
-        TF_VAR_authorized_key_bucket='${{ secrets.YC_BUCKET_ADMIN_AUTHORIZED_KEY }}'
+        TF_VAR_authorized_key=${{ secrets.YC_MAIN_ADMIN_AUTHORIZED_KEY }}
+        TF_VAR_authorized_key_bucket=${{ secrets.YC_BUCKET_ADMIN_AUTHORIZED_KEY }}
         TF_VAR_static_key_id_bucket=${{ secrets.YC_BUCKET_ADMIN_STATIC_KEY_ID }}
         TF_VAR_static_key_bucket=${{ secrets.YC_BUCKET_ADMIN_STATIC_KEY }}
 

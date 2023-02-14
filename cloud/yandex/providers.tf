@@ -1,8 +1,6 @@
 terraform {
 
-  backend "s3" {
-
-  }
+  backend "s3" {}
 
   required_providers {
     yandex = {
@@ -40,20 +38,19 @@ provider "yandex" {
   folder_id                = var.folder_id_bucket
   cloud_id                 = var.cloud_id
   service_account_key_file = var.authorized_key_bucket
-  # you need a static key to import a bucket
-  storage_access_key = var.static_key_id_bucket
-  storage_secret_key = var.static_key_bucket
+  storage_access_key       = var.static_key_id_bucket
+  storage_secret_key       = var.static_key_bucket
 }
 
 provider "kubernetes" {
   config_path    = pathexpand(var.kubernetes_config_path)
-  config_context = module.main.cluster_id
+  config_context = local.cluster_id
 }
 
 provider "helm" {
   kubernetes {
     config_path    = pathexpand(var.kubernetes_config_path)
-    config_context = module.main.cluster_id
+    config_context = local.cluster_id
   }
 
   registry {

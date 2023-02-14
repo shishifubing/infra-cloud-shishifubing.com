@@ -13,9 +13,15 @@ Currently it's using [Yandex Cloud][yandex-cloud-url]
 
 For more information please refer to [cloud/yandex][documentation]
 
-# Architecture
+# Architecture diagram
 
 TODO
+
+# Regenerate module documentation
+
+```bash
+terraform-docs markdown table --recursive --output-file README.md cloud/yandex
+```
 
 <!-- relative links -->
 

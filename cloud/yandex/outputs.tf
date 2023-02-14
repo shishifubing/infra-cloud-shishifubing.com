@@ -44,5 +44,5 @@ output "folder_id" {
 }
 
 output "cluster_id" {
-  value = module.main.cluster_id
+  value = local.cluster_id
 }

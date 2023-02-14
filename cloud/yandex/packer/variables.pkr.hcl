@@ -16,19 +16,19 @@ variable "setup_script_path" {
   default = "${env("DOTFILES")}/scripts/setup.sh"
 }
 
+variable "authorized_key_path" {
+  description = "authorized key for yandex cloud"
+  sensitive = true
+}
+
 variable "folder_id" {
   description = "yandex cloud folder id"
-  default     = "b1gkrp2c8oqlmgsedd9t"
+  default     = "b1gt03ltb5rv3iieiuv9"
 }
 
 variable "cloud_id" {
   description = "yandex cloud cloud id"
   default     = "b1g1vmf1q6kf4ap0d710"
-}
-
-variable "oauth_key" {
-  description = "oauth key to setup yc on the bastion server"
-  sensitive   = true
 }
 
 variable "zone" {

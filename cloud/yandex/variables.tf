@@ -1,6 +1,6 @@
 variable "folder_id" {
   description = "folder id in Yandex Cloud"
-  default     = "b1gkrp2c8oqlmgsedd9t"
+  default     = "b1gt03ltb5rv3iieiuv9"
 }
 
 variable "folder_id_bucket" {

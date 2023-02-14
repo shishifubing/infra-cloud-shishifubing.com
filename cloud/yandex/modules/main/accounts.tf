@@ -1,21 +1,28 @@
-# accounts
 resource "yandex_iam_service_account" "editor" {
-  name        = "editor"
+  # used for cluster
+  name        = "main-editor"
   description = "editor service account (terraform)"
 }
 
 resource "yandex_iam_service_account" "viewer" {
-  name        = "viewer"
+  # used for bastion
+  name        = "main-viewer"
   description = "viewer service account (terraform)"
 }
 
-resource "yandex_iam_service_account" "cluster_ingress" {
-  name        = "clusteringress"
-  description = "viewer service account (terraform)"
+resource "yandex_iam_service_account" "admin" {
+  name        = "main-admin"
+  description = "admin service account (terraform)"
 }
-###
 
-# roles
+resource "yandex_resourcemanager_folder_iam_binding" "admin" {
+  folder_id = var.folder_id
+  role      = "admin"
+  members = [
+    "serviceAccount:${yandex_iam_service_account.admin.id}"
+  ]
+}
+
 resource "yandex_resourcemanager_folder_iam_binding" "editor" {
   folder_id = var.folder_id
   role      = "editor"
@@ -29,39 +36,5 @@ resource "yandex_resourcemanager_folder_iam_binding" "viewer" {
   role      = "viewer"
   members = [
     "serviceAccount:${yandex_iam_service_account.viewer.id}"
-  ]
-}
-
-
-resource "yandex_resourcemanager_folder_iam_binding" "alb_editor" {
-  folder_id = var.folder_id
-  role      = "alb.editor"
-  members = [
-    "serviceAccount:${yandex_iam_service_account.cluster_ingress.id}"
-  ]
-}
-
-resource "yandex_resourcemanager_folder_iam_binding" "vpc_publicAdmin" {
-  folder_id = var.folder_id
-  role      = "vpc.publicAdmin"
-  members = [
-    "serviceAccount:${yandex_iam_service_account.cluster_ingress.id}"
-  ]
-}
-
-resource "yandex_resourcemanager_folder_iam_binding" "certificate_admin" {
-  folder_id = var.folder_id
-  role      = "certificate-manager.admin"
-  members = [
-    "serviceAccount:${yandex_iam_service_account.cluster_ingress.id}"
-  ]
-}
-
-
-resource "yandex_resourcemanager_folder_iam_binding" "compute_viewer" {
-  folder_id = var.folder_id
-  role      = "compute.viewer"
-  members = [
-    "serviceAccount:${yandex_iam_service_account.cluster_ingress.id}"
   ]
 }

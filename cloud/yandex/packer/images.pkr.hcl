@@ -10,7 +10,8 @@ locals {
 }
 
 source "yandex" "debian-11-base" {
-  token                = var.oauth_key
+  # it has to be a path, you cannot just use a key
+  service_account_key_file = var.authorized_key_path
   folder_id            = var.folder_id
   zone                 = var.zone
   use_ipv4_nat         = var.use_nat
@@ -35,15 +36,9 @@ build {
   sources = ["source.yandex.${local.base}"]
 
   provisioner "shell" {
-    env = {
-      YC_TOKEN     =  var.oauth_key
-      YC_FOLDER_ID = var.folder_id
-      YC_CLOUD_ID  = var.cloud_id
-    }
     scripts = [
       "image_init_wait.sh",
-      var.setup_script_path,
-      "setup_yc.expect"
+      var.setup_script_path
     ]
   }
 

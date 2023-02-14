@@ -6,7 +6,9 @@
     cluster_address = "[::]:8201"
   }
 
-  storage "s3" { }
+  storage "s3" {
+    endpoint                    = "storage.yandexcloud.net"
+  }
 
   seal "yandexcloudkms" {
     kms_key_id     = "{{ .Values.yandexKmsKeyId }}"

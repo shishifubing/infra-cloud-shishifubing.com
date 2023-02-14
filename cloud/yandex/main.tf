@@ -1,10 +1,13 @@
 locals {
-  keys_path           = "${path.module}/packer/authorized_keys"
-  ssh_authorized_keys = <<-EOT
+  keys_path             = "${path.module}/packer/authorized_keys"
+  ssh_authorized_keys   = <<-EOT
     root:${file("${local.keys_path}/id_ci.pub")}
     root:${file("${local.keys_path}/id_main.pub")}
     root:${file("${local.keys_path}/id_rsa.pub")}
   EOT
+  bucket_terraform_name = "${replace(var.domain, ".", "-")}-terraform"
+  bucket_vault_name     = "${replace(var.domain, ".", "-")}-vault"
+  cluster_id            = module.main.cluster.id
 }
 
 # manage the s3 bucket
@@ -15,8 +18,8 @@ module "bucket" {
   }
 
   folder_id          = var.folder_id_bucket
-  terraform_name     = "${replace(var.domain, ".", "-")}-terraform"
-  vault_name         = "${replace(var.domain, ".", "-")}-vault"
+  terraform_name     = local.bucket_terraform_name
+  vault_name         = local.bucket_vault_name
   vault_max_size     = 1024 * 1024 * 300 # 300 megabytes
   terraform_max_size = 1024 * 1024 * 300 # 300 megabytes
 }
@@ -37,35 +40,13 @@ module "main" {
   user_server         = var.user_server
 }
 
-# setup kubectl if `kubectl cluster-info` fails
-# this is intended only for personal convenience
-resource "null_resource" "check_kubeconfig" {
-  provisioner "local-exec" {
-    command = <<-EOT
-      set -Eeuxo pipefail
-      {
-        kubectl config use-context "${module.main.cluster_id}"
-        kubectl cluster-info
-      } || ${path.module}/setup_kubectl.sh \
-        "${var.domain}"                    \
-        "${var.cloud_id}"                  \
-        "${var.folder_id}"                 \
-        "${module.main.cluster_id}"        \
-        "${var.user_server}"
-    EOT
-  }
-}
-
 # setup the kubernetes cluster
 module "cluster" {
   source = "./modules/cluster"
-  depends_on = [
-    null_resource.check_kubeconfig
-  ]
 
-  ingress_authorized_key = module.main.cluster_ingress_authorized_key
-  folder_id              = var.folder_id
-  cluster_id             = module.main.cluster_id
-  vault_authorized_key   = ""
-  vault_kms_key_id       = ""
+  folder_id                = var.folder_id
+  cluster_id               = local.cluster_id
+  zone                     = var.zone
+  vault_bucket_name        = local.bucket_vault_name
+  vault_backend_static_key = module.bucket.vault_editor_static_key
 }

@@ -6,5 +6,8 @@ terraform {
     helm = {
       source = "hashicorp/helm"
     }
+    yandex = {
+      source = "yandex-cloud/yandex"
+    }
   }
 }

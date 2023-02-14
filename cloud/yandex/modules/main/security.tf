@@ -5,12 +5,6 @@ resource "yandex_kms_symmetric_key" "cluster" {
   rotation_period   = "7000h" # ~10 month
 }
 
-resource "yandex_iam_service_account_key" "cluster_ingress" {
-  service_account_id = yandex_iam_service_account.cluster_ingress.id
-  description        = "authorized key for the cluster ingress (terraform)"
-  key_algorithm      = "RSA_4096"
-}
-
 resource "yandex_vpc_security_group" "allow_outgoing" {
   name        = "allow_outgoing"
   description = "allow all outgoing connections"

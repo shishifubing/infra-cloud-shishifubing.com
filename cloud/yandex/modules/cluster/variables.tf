@@ -1,33 +1,25 @@
-variable "namespace_monitoring" {
-  description = "namespace for monitoring"
-  default     = "monitoring"
+variable "namespaces" {
+  description = "dictionary of namespaces for services"
+  default     = {}
+  type = object({
+    vault      = optional(string, "vault")
+    ingress    = optional(string, "ingress")
+    monitoring = optional(string, "monitoring")
+  })
 }
 
-variable "namespace_ingress" {
-  description = "namespace for the cluster ingress"
-  default     = "ingress"
+variable "vault_bucket_name" {
+  description = "vault's s3 bucket name"
 }
 
-variable "namespace_vault" {
-  description = "namespace for Vault"
-  default     = "vault"
-}
-
-variable "ingress_authorized_key" {
+variable "vault_backend_static_key" {
+  description = "s3 static key for vault"
   sensitive   = true
-  description = "authorized key for the cluster ingress"
 }
 
-variable "vault_authorized_key" {
-  sensitive   = true
-  description = "authorized key for Vault"
+variable "zone" {
+  description = "yandex cloud zone"
 }
-
-variable "vault_kms_key_id" {
-  sensitive   = true
-  description = "id of the KMS key for Vault"
-}
-
 
 variable "folder_id" {
   description = "yandex cloud folder id"

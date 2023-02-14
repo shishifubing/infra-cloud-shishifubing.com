@@ -1,8 +1,9 @@
 resource "helm_release" "ingress_controller" {
-  name        = "ingresscontroller"
+  # https://cloud.yandex.ru/marketplace/products/yc/alb-ingress-controller
+  name        = "ingress-controller"
   description = "nginx ingress controller"
 
-  namespace       = kubernetes_namespace.ingress.metadata.0.name
+  namespace       = var.namespaces.ingress
   atomic          = true
   cleanup_on_fail = true
   lint            = true
@@ -11,10 +12,9 @@ resource "helm_release" "ingress_controller" {
   chart      = "chart"
   repository = "oci://cr.yandex/yc-marketplace/yandex-cloud/yc-alb-ingress"
 
-  # I cannot use `set` or `set_sensitive` - the helm provider fucks up the
-  # formatting somehow
+  # I cannot use `set` or `set_sensitive` - helm provider fucks up the formatting
   values = [
-    "saKeySecretKey: '${jsonencode(var.ingress_authorized_key)}'"
+    "saKeySecretKey: '${jsonencode(yandex_iam_service_account_key.ingress)}'"
   ]
 
   set {

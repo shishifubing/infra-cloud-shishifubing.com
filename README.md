@@ -2,7 +2,6 @@
 
 # [`infra-cloud-shishifubing.com`][url-repo]
 
-
 [![License][shield-license]][url-license]
 [![Terraform][shield-workflow-terraform]][url-workflow-terraform]
 
@@ -10,15 +9,17 @@ Terraform module managing infrastructure for [shishifubing.com][url-site]
 
 </div>
 
-Currently it's using [Yandex Cloud][url-yandex-cloud]
+## About The Project
+
+Currently the module using [Yandex Cloud][url-yandex-cloud]
 
 For more information please refer to [cloud/yandex][documentation]
 
-# Architecture diagram
+### Architecture diagram
 
 TODO
 
-# Regenerate module documentation
+## Regenerate module documentation
 
 ```bash
 terraform-docs markdown table --recursive --output-file README.md cloud/yandex

@@ -2,9 +2,13 @@ name: "terraform"
 
 on:
   push:
+    paths: 
+      - cloud/**
     branches:
       - main
   pull_request:
+    paths: 
+      - cloud/**
 
 jobs:
   call:

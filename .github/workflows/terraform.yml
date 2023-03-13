@@ -1,4 +1,4 @@
-name: "terraform"
+name: terraform
 
 on:
   push:
@@ -9,6 +9,10 @@ on:
   pull_request:
     paths: 
       - cloud/**
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
 
 jobs:
   call:
